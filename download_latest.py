@@ -8,9 +8,9 @@ from os import makedirs
 # get search term
 a = 'graph'
 
-step = 100  # 每一次取100篇
+step = 200  # 每一次取200篇
 
-start = 6300   # 从start开始
+start = 6400   # 从start开始
 timestamp = time()
 makedirs(f'output-{timestamp}', exist_ok=True)
 makedirs(f'raw-{timestamp}', exist_ok=True)
@@ -102,4 +102,4 @@ while True:
         break
     start += step
     print("累计找到了%d篇" % start)
-    sleep(30 + random() * 900)  # 避免被封
+    sleep(30 + random() * 200)  # 避免被封
