@@ -1,7 +1,7 @@
 import requests
 from time import time, sleep
 from xml.etree import ElementTree as ET
-from random import random
+from random import random, choice
 from os import makedirs
 
 
@@ -10,10 +10,20 @@ a = 'graph'
 
 step = 100  # 每一次取100篇
 
-start = 4700   # 从start开始
+start = 6300   # 从start开始
 timestamp = time()
 makedirs(f'output-{timestamp}', exist_ok=True)
 makedirs(f'raw-{timestamp}', exist_ok=True)
+
+# 定义一个包含多个 User-Agent 字符串的列表
+user_agents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36',
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+    'Mozilla/5.0 (iPad; CPU OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+    'Mozilla/5.0 (Linux; Android 10; SM-G981B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.91 Mobile Safari/537.36'
+]
 
 while True:
     # URL of the XML object
@@ -21,10 +31,17 @@ while True:
     print(url)
 
     try:
+        if random() < 0.9:
+            # 随机选择一个 User-Agent
+            selected_user_agent = choice(user_agents)
+
+            headers = {
+                'User-Agent': selected_user_agent
+            }
+        else:
+            headers = {}
         # Send a GET request to the URL
-        response = requests.get(url, headers={
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0'
-        })
+        response = requests.get(url, headers=headers)
     except:
         print("出问题了，等一会")
         sleep(1000 + random() * 2000)
