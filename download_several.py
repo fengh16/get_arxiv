@@ -1,3 +1,6 @@
+# 中间漏了几个，用这个脚本补上
+# 漏掉的在combine变量中
+
 import requests
 from time import time, sleep
 from xml.etree import ElementTree as ET
@@ -8,9 +11,6 @@ from os import makedirs
 # get search term
 a = 'graph'
 
-step = 200  # 每一次取200篇
-
-start = 10600   # 从start开始
 timestamp = time()
 makedirs(f'output-{timestamp}', exist_ok=True)
 makedirs(f'raw-{timestamp}', exist_ok=True)
@@ -25,7 +25,14 @@ user_agents = [
     'Mozilla/5.0 (Linux; Android 10; SM-G981B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.91 Mobile Safari/537.36'
 ]
 
-while True:
+combine = [(3400, 100), (3500, 100), (3600, 100), (4200, 100), (6000, 100), (6300, 100), (8800, 200), (9400, 200)]
+
+index = 0
+
+while index < len(combine):
+    start = combine[index][0]
+    step = combine[index][1]
+
     # URL of the XML object
     url = "http://export.arxiv.org/api/query?search_query=all:%s&sortBy=lastUpdatedDate&sortOrder=descending&start=%d&max_results=%d" % (a.lower().replace(' ','%20'), start, step)
     print(url)
@@ -108,8 +115,10 @@ while True:
         print(content_returned.decode().count("<summary>"))
         print("找完了")
         break
-    start += step
-    print("累计找到了%d篇" % start)
+    
+    index += 1
+
+    print("找完了", index, len(combine))
     sleep(30 + random() * 200)  # 避免被封
     if random() < 0.1:
         sleep(1000 + random() * 2000)
