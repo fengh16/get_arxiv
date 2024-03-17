@@ -10,7 +10,7 @@ a = 'graph'
 
 step = 200  # 每一次取200篇
 
-start = 6400   # 从start开始
+start = 7000   # 从start开始
 timestamp = time()
 makedirs(f'output-{timestamp}', exist_ok=True)
 makedirs(f'raw-{timestamp}', exist_ok=True)
@@ -40,8 +40,15 @@ while True:
             }
         else:
             headers = {}
+        if random() < 0.7:
+            proxies = {
+                'http': 'http://localhost:17891',
+                'https': 'http://localhost:17891'
+            }
+        else:
+            proxies = {}
         # Send a GET request to the URL
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, proxies=proxies)
     except:
         print("出问题了，等一会")
         sleep(1000 + random() * 2000)
@@ -103,3 +110,5 @@ while True:
     start += step
     print("累计找到了%d篇" % start)
     sleep(30 + random() * 200)  # 避免被封
+    if random() < 0.1:
+        sleep(1000 + random() * 2000)
